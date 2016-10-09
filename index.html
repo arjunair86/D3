@@ -1,5 +1,5 @@
 
-    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
     <title>D3</title>
     <style>
         path {
@@ -26,8 +26,8 @@
     <script>
         var xColumn = "beginTime";
         var yColumn = "batteryStatus";
-        var xScale = d3.time.scale().range([0, 600]);
-        var yScale = d3.scale.linear().range([450, 0]);
+        var xScale = d3.scaleTime().range([0, 600]);
+        var yScale = d3.scaleLinear().range([450, 0]);
         var margin = {
             left: 50,
             right: 10,
@@ -82,8 +82,7 @@
             tooltip.text(Math.round(yScale.invert(m[1])));
         }
         
-        var line = d3.svg.line()
-            .interpolate("linear")
+        var line = d3.line()
             .x(function (d) {
                 return xScale(new Date(d[xColumn]));
             })
@@ -91,8 +90,8 @@
                 return yScale(d[yColumn]);
             });
 
-        var xAxis = d3.svg.axis().scale(xScale).orient("bottom").ticks(5).tickFormat(d3.time.format('%A'));
-        var yAxis = d3.svg.axis().scale(yScale).orient("left");
+        var xAxis = d3.axisBottom(xScale).ticks(5).tickFormat(d3.timeFormat('%A'));
+        var yAxis = d3.axisLeft(yScale);
 
         function render(data) {
             var xExtent = d3.extent(data, function (d) {
@@ -117,7 +116,7 @@
             .send("POST", JSON.stringify({
                 deviceId: "252ACF39-49DB-45AB-9058-DD6B9D5AD54E"
             }));*/
-          d3.json("data.json", function(error, data){
+          d3.json("data/data.json", function(error, data){
           	if (error) 
           		console.log(error);
           	else 
